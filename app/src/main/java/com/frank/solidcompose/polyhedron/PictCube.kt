@@ -53,6 +53,15 @@ object PictCube : Polyhedron() {
         D3y: Float
     )
 
+    private val face = arrayOf(
+        intArrayOf(0, 3, 2, 1),
+        intArrayOf(7, 4, 5, 6),
+        intArrayOf(0, 4, 7, 3),
+        intArrayOf(2, 6, 5, 1),
+        intArrayOf(3, 7, 6, 2),
+        intArrayOf(1, 5, 4, 0)
+    )
+
     init {
         System.loadLibrary("DrawSolid")
 
@@ -103,15 +112,6 @@ object PictCube : Polyhedron() {
         Common.setEYE(Common.Eye.x, Common.Eye.y, Common.Eye.z)
     }
 
-    private val face = arrayOf(
-        intArrayOf(0, 3, 2, 1),
-        intArrayOf(7, 4, 5, 6),
-        intArrayOf(0, 4, 7, 3),
-        intArrayOf(2, 6, 5, 1),
-        intArrayOf(3, 7, 6, 2),
-        intArrayOf(1, 5, 4, 0)
-    )
-
     private fun bmp2byte() {
         var bytes: Int
         var buf: ByteBuffer
@@ -139,9 +139,7 @@ object PictCube : Polyhedron() {
         )
     }
 
-    @Composable
-    override fun DrawSolid() {
-        if (toDraw < -1) return
+    private fun drawSolid0() {
 
         val index = intArrayOf(0, 0, 0)
         val bmpIndex = intArrayOf(0, 0, 0)
@@ -191,11 +189,16 @@ object PictCube : Polyhedron() {
                 p[face[index[2]][3]].y
             )
             newCubeBMP.copyPixelsFromBuffer(ByteBuffer.wrap(newCubeBMPByteArray))
-            toDraw = 1 - toDraw
-        } catch (e: Exception) {
-            var a = e.toString()
-            a += ""
+        } catch (_: Exception) {
         }
+    }
+
+    @Composable
+    override fun DrawSolid() {
+        if (toDraw < -1) return
+
+        drawSolid0()
+
         Image(
             bitmap = newCubeBMP.asImageBitmap(),
             contentDescription = null,
