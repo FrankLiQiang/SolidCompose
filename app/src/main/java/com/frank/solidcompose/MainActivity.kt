@@ -2,7 +2,6 @@ package com.frank.solidcompose
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
@@ -23,6 +22,7 @@ import com.frank.solidcompose.polyhedron.Dodecahedron0
 import com.frank.solidcompose.polyhedron.Icosahedron
 import com.frank.solidcompose.polyhedron.Octahedron
 import com.frank.solidcompose.polyhedron.PictCube
+import com.frank.solidcompose.polyhedron.StellatedOctahedron
 import com.frank.solidcompose.polyhedron.Tetrahedron
 import com.frank.solidcompose.ui.theme.SolidComposeTheme
 import kotlin.system.exitProcess
@@ -125,7 +125,9 @@ class MainActivity : ComponentActivity() {
                         14 -> {
                             ColorCube.DrawSolid()
                         }
-
+                        15 -> {
+                            StellatedOctahedron.DrawSolid()
+                        }
                         17 -> {
                             Earth.DrawPicBall()
                         }
