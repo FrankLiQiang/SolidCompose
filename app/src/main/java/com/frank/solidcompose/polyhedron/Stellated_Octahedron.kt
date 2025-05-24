@@ -2,7 +2,7 @@ package com.frank.solidcompose.polyhedron
 
 import com.frank.solidcompose.Common
 
-object StellatedOctahedron : Polyhedron() {
+object Stellated_Octahedron : Polyhedron() {
     init {
         val thisEdge = arrayOf(
             intArrayOf(0, 2),
@@ -25,12 +25,12 @@ object StellatedOctahedron : Polyhedron() {
             intArrayOf(8, 13),
             intArrayOf(10, 12),
             intArrayOf(10, 13),
-            intArrayOf(14, 12),
-            intArrayOf(15, 12),
-            intArrayOf(14, 13),
-            intArrayOf(15, 13),
+            intArrayOf(11, 12),
+            intArrayOf(9, 12),
+            intArrayOf(11, 13),
+            intArrayOf(9, 13),
         )
-        initialization(16, 24, thisEdge)
+        initialization(14, 24, thisEdge)
         edgeLength = Common._screenWidth / 2f
         Common.ObjCenter.reset(Common._screenWidth / 2f, Common._screenHeight / 2f, -edgeLength / 2)
 
@@ -87,14 +87,6 @@ object StellatedOctahedron : Polyhedron() {
         pX[13] = (pX[5] + pX[7]) / 2
         pY[13] = (pY[5] + pY[7]) / 2
         pZ[13] = (pZ[5] + pZ[7]) / 2
-
-        pX[14] = (pX[0] + pX[7]) / 2
-        pY[14] = (pY[0] + pY[7]) / 2
-        pZ[14] = (pZ[0] + pZ[7]) / 2
-
-        pX[15] = (pX[5] + pX[2]) / 2
-        pY[15] = (pY[5] + pY[2]) / 2
-        pZ[15] = (pZ[5] + pZ[2]) / 2
         myInit()
     }
 }

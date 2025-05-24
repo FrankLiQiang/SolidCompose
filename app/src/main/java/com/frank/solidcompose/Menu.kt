@@ -51,10 +51,7 @@ fun showMenu() {
         }
         Row(Modifier.weight(1.0f)) {
             textButton("圆环", Modifier.weight(1.0f)) { solidType = 6 }
-            textButton("图片圆环", Modifier.weight(1.0f)) {
-                solidType = 16
-                Toast.makeText(mainActivity, "作成中...", Toast.LENGTH_SHORT).show()
-            }
+            textButton("星形八面体(消隐)", Modifier.weight(1.0f)) { solidType = 16 }
         }
         Row(Modifier.weight(1.0f)) {
             textButton("莫比乌斯环", Modifier.weight(1.0f)) {
@@ -87,7 +84,7 @@ fun textButton(currentShowWord: String, modifier: Modifier = Modifier, event: ()
             ),
             onClick = {
                 event()
-                if (!isRotateNumDialog && solidType != 16) {
+                if (!isRotateNumDialog) {
                     isShowMenu = false
                 }
             },

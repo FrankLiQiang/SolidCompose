@@ -23,6 +23,7 @@ import com.frank.solidcompose.polyhedron.Icosahedron
 import com.frank.solidcompose.polyhedron.Octahedron
 import com.frank.solidcompose.polyhedron.PictCube
 import com.frank.solidcompose.polyhedron.StellatedOctahedron
+import com.frank.solidcompose.polyhedron.Stellated_Octahedron
 import com.frank.solidcompose.polyhedron.Tetrahedron
 import com.frank.solidcompose.ui.theme.SolidComposeTheme
 import kotlin.system.exitProcess
@@ -126,6 +127,9 @@ class MainActivity : ComponentActivity() {
                             ColorCube.DrawSolid()
                         }
                         15 -> {
+                            Stellated_Octahedron.DrawSolid()
+                        }
+                        16 -> {
                             StellatedOctahedron.DrawSolid()
                         }
                         17 -> {
