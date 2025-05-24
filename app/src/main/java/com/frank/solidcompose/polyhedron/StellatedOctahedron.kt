@@ -152,17 +152,21 @@ object StellatedOctahedron : Polyhedron() {
                         drawLine(
                             start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
                             end = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
-                            color = Color.LightGray
+                            strokeWidth = 10f,
+//                            color = Color.LightGray
+                            color = Color.Yellow
                         )
                         drawLine(
                             start = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
                             end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
-                            color = Color.LightGray
+                            strokeWidth = 10f,
+                            color = Color.Yellow
                         )
                         drawLine(
                             start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
                             end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
-                            color = Color.LightGray
+                            strokeWidth = 10f,
+                            color = Color.Yellow
                         )
                     }
                 }
