@@ -1,6 +1,6 @@
 package com.frank.solidcompose.polyhedron
 
-import android.util.Log
+//import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,10 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.frank.solidcompose.Common
+import com.frank.solidcompose.Common.PointF
 import com.frank.solidcompose.toDraw
 import kotlin.collections.indices
 import kotlin.collections.mutableMapOf
 import kotlin.collections.set
+import kotlin.math.abs
 
 object StellatedOctahedron : Polyhedron() {
     // 顶点 0 对面
@@ -38,7 +40,6 @@ object StellatedOctahedron : Polyhedron() {
         intArrayOf(7, 13, 11, 3, 10, 11, 3, 13, 10),
         intArrayOf(6, 10, 13, 3, 11, 13, 3, 10, 11),
     )
-
     // 顶点 4 对面
     private val face4 = arrayOf(
         intArrayOf(1, 9, 12, 4, 8, 12, 4, 9, 8),
@@ -149,6 +150,29 @@ object StellatedOctahedron : Polyhedron() {
         return (x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1) < 0
     }
 
+    private fun intersection_point(x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float, x4: Float, y4: Float): PointF? {
+        val A1 = y2 - y1
+        val B1 = x1 - x2
+        val C1 = A1 * x1 + B1 * y1
+
+        val A2 = y4 - y3
+        val B2 = x3 - x4
+        val C2 = A2 * x3 + B2 * y3
+
+        val denominator = A1 * B2 - A2 * B1
+        if (abs(denominator) < 0.000001) {
+            return null
+        }
+
+        val x = (B2 * C1 - B1 * C2) / denominator
+        val y = (A1 * C2 - A2 * C1) / denominator
+        val ret = PointF()
+        ret.x = x
+        ret.y = y
+
+        return ret
+    }
+
     @Composable
     override fun DrawSolid() {
         Canvas(
@@ -160,34 +184,129 @@ object StellatedOctahedron : Polyhedron() {
                 drawLine(
                     start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
                     end = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
-                    strokeWidth = 10f,
+                    strokeWidth = 3f,
 //                            color = Color.LightGray
                     color = Color.Yellow
                 )
                 drawLine(
                     start = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
                     end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
-                    strokeWidth = 10f,
+                    strokeWidth = 3f,
                     color = Color.Yellow
                 )
                 drawLine(
                     start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
                     end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
-                    strokeWidth = 10f,
+                    strokeWidth = 3f,
                     color = Color.Yellow
                 )
+            }
+            fun isPointInTriangle(P: Int, A: Int, B: Int, C: Int): Int
+            {
+                val PA = PointF()
+                PA.x = p[A].x - p[P].x
+                PA.y = p[A].y - p[P].y
+
+                val PB = PointF()
+                PB.x = p[B].x - p[P].x
+                PB.y = p[B].y - p[P].y
+
+                val PC = PointF()
+                PC.x = p[C].x - p[P].x
+                PC.y = p[C].y - p[P].y
+
+                val t1 = PA.x * PB.y - PA.y * PB.x
+                val t2 = PB.x * PC.y - PB.y * PC.x
+                val t3 = PC.x * PA.y - PC.y * PA.x
+                return if ( t1 * t2 >= 0) {
+                    if (t1 * t3 >= 0) {
+                        0
+                    } else {
+                        1
+                    }
+                } else {
+                    if (t1 * t3 >= 0) {
+                        2
+                    } else {
+                        3
+                    }
+                }
+            }
+            val map = mutableMapOf<String, String>()
+            fun drawTriangle2(key: String) {
+                val arr0 = key.split(",")
+                val arr = map[key]?.split(",")
+                if (arr != null) {
+                    val ret = isPointInTriangle(arr[3].toInt(), arr0[0].toInt(), arr0[1].toInt(), arr0[2].toInt())
+                    if (ret == 0) {
+                        drawLine(
+                            start = Offset(x = p[arr0[0].toInt()].x, y = p[arr0[0].toInt()].y),
+                            end = Offset(x = p[arr0[1].toInt()].x, y = p[arr0[1].toInt()].y),
+                            strokeWidth = 3f,
+                            color = Color.Yellow
+                        )
+                        drawLine(
+                            start = Offset(x = p[arr0[0].toInt()].x, y = p[arr0[0].toInt()].y),
+                            end = Offset(x = p[arr0[2].toInt()].x, y = p[arr0[2].toInt()].y),
+                            strokeWidth = 3f,
+                            color = Color.Yellow
+                        )
+                    }else if (ret == 1) {
+                        drawLine(
+                            start = Offset(x = p[arr0[0].toInt()].x, y = p[arr0[0].toInt()].y),
+                            end = Offset(x = p[arr0[1].toInt()].x, y = p[arr0[1].toInt()].y),
+                            strokeWidth = 3f,
+                            color = Color.Yellow
+                        )
+                        val intersectionPoint = intersection_point(
+                            p[arr0[0].toInt()].x,
+                            p[arr0[0].toInt()].y,
+                            p[arr0[2].toInt()].x,
+                            p[arr0[2].toInt()].y,
+                            p[arr[6].toInt()].x,
+                            p[arr[6].toInt()].y,
+                            p[arr[7].toInt()].x,
+                            p[arr[7].toInt()].y,
+                        )
+                        if (intersectionPoint != null) {
+                            drawLine(
+                                start = Offset(x = p[arr0[0].toInt()].x, y = p[arr0[0].toInt()].y),
+                                end = Offset(x = intersectionPoint.x, y = intersectionPoint.y),
+                                strokeWidth = 3f,
+                                color = Color.Yellow
+                            )
+                        }
+                    }else if (ret == 3) {
+                        drawLine(
+                            start = Offset(x = p[arr0[0].toInt()].x, y = p[arr0[0].toInt()].y),
+                            end = Offset(x = p[arr0[2].toInt()].x, y = p[arr0[2].toInt()].y),
+                            strokeWidth = 3f,
+                            color = Color.Yellow
+                        )
+                        val intersectionPoint = intersection_point(
+                            p[arr0[0].toInt()].x,
+                            p[arr0[0].toInt()].y,
+                            p[arr0[1].toInt()].x,
+                            p[arr0[1].toInt()].y,
+                            p[arr[3].toInt()].x,
+                            p[arr[3].toInt()].y,
+                            p[arr[5].toInt()].x,
+                            p[arr[5].toInt()].y,
+                        )
+                        if (intersectionPoint != null) {
+                            drawLine(
+                                start = Offset(x = p[arr0[0].toInt()].x, y = p[arr0[0].toInt()].y),
+                                end = Offset(x = intersectionPoint.x, y = intersectionPoint.y),
+                                strokeWidth = 3f,
+                                color = Color.Yellow
+                            )
+                        }
+                    }
+                }
             }
 
             if (toDraw < -1) return@Canvas
 
-            val map = mutableMapOf<String, String>()
-
-//            fun fuzzySearch(map: Map<String, String>, headTerm: String, searchTerm: String): Pair<String, Int>? {
-//                Log.i("AAA","headTerm = " + headTerm)
-//                Log.i("AAA","searchTerm = " + searchTerm)
-////                return map.values.any { it.startsWith(headTerm, ignoreCase = true) && it.endsWith(searchTerm, ignoreCase = true) }
-//                return map.entries.find { it.startsWith(headTerm, ignoreCase = true) && it.endsWith(searchTerm, ignoreCase = true) }?.toPair()
-//            }
             fun fuzzySearch(map: Map<String, String>, headTerm: String, searchTerm: String): Pair<String, String>? {
                 return map.entries.find { it.value.startsWith(headTerm, ignoreCase = true) &&
                         it.key.endsWith(searchTerm, ignoreCase = true) }?.toPair()
@@ -220,23 +339,13 @@ object StellatedOctahedron : Polyhedron() {
                 }
             }
             for (key in map.keys) {
-                Log.i("AAA","key 000 = " + key + " and value 000 = " + map[key])
-                println("key= " + key + " and value= " + map[key])
                 val arr0 = key.split(",")
                 val arr = map[key]?.split(",")
                 val i = arr?.get(0)?.toInt()
-                Log.i("AAA","String.format(\"%02d\", 1 - i!!) = " + String.format("%02d", 1 - i!!))
-                Log.i("AAA","arr0[2] , arr0[1] = " + arr0[2] + "," + arr0[1])
                 val result = fuzzySearch(map, String.format("%02d", 1 - i!!), arr0[2] + "," + arr0[1])
-//                Log.i("AAA","key 999 = ")
-//                drawTriangle(intArrayOf(arr0[0].toInt(), arr0[1].toInt(), arr0[2].toInt()))
                 if (result != null) {
-//                    drawTriangle(intArrayOf(p1!!, p2!!, p3!!))
-//                    Log.i("AAA","key 999 = ")
-                    Log.i("AAA","key 999 = " + result.first + " and value 999 = " + result.second)
                     map[key] = map[key] + ",B"
                     map[result.first] = result.second + ",B"
-//                    println("key 999 = " + result.first + " and value 999 = " + result.second)
                 }
             }
             for (key in map.keys) {
@@ -247,21 +356,7 @@ object StellatedOctahedron : Polyhedron() {
                     val p3 = arr[2].toInt()
                     drawTriangle(intArrayOf(p1, p2, p3))
                 } else {
-//                    val arr = map[key]?.split(",")
-//                    val i = arr?.get(0)?.toInt()
-//                    val p1 = arr?.get(3)?.toInt()
-//                    val p2 = arr?.get(4)?.toInt()
-//                    val p3 = arr?.get(5)?.toInt()
-//                    val result = fuzzySearch(map, String.format("%02d", 1 - i!!), arr[5] + "," + arr[4])
-//    //                Log.i("AAA","key 999 = ")
-//                    if (result != null) {
-////                        drawTriangle(intArrayOf(p1!!, p2!!, p3!!))
-//    //                    Log.i("AAA","key 999 = ")
-//                        Log.i("AAA","key 999 = " + result.first + " and value 999 = " + result.second)
-////                        map[key] = map[key] + ",B"
-////                        map[result.first] = result.second + ",B"
-//    //                    println("key 999 = " + result.first + " and value 999 = " + result.second)
-//                    }
+                    drawTriangle2(key)
                 }
             }
         }
