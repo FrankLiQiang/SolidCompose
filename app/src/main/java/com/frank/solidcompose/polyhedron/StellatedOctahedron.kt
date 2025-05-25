@@ -16,52 +16,52 @@ import kotlin.collections.set
 object StellatedOctahedron : Polyhedron() {
     // 顶点 0 对面
     private val face0 = arrayOf(
-        intArrayOf(4, 8, 12),
-        intArrayOf(7, 11, 8 ),
-        intArrayOf(5, 12, 11),
+        intArrayOf(4, 8, 12, 0, 11, 12, 0, 8, 11),
+        intArrayOf(7, 11, 8, 0, 12, 8, 0, 11, 12),
+        intArrayOf(5, 12, 11, 0, 8, 11, 0, 12, 8),
     )
     // 顶点 1 对面
     private val face1 = arrayOf(
-        intArrayOf(5, 10, 12),
-        intArrayOf(6, 9, 10),
-        intArrayOf(4, 12, 9),
+        intArrayOf(5, 10, 12, 1, 9, 12, 1, 10, 9),
+        intArrayOf(6, 9, 10, 1, 12, 10, 1, 9, 12),
+        intArrayOf(4, 12, 9, 1, 10, 9, 1, 12, 10),
     )
     // 顶点 2 对面
     private val face2 = arrayOf(
-        intArrayOf(6, 13, 9),
-        intArrayOf(7, 8, 13),
-        intArrayOf(4, 9, 8),
+        intArrayOf(6, 13, 9, 2, 8, 9, 2, 13, 8),
+        intArrayOf(7, 8, 13, 2, 9, 13, 2, 8, 9),
+        intArrayOf(4, 9, 8, 2, 13, 8, 2, 9, 13),
     )
     // 顶点 3 对面
     private val face3 = arrayOf(
-        intArrayOf(5, 11, 10),
-        intArrayOf(7, 13, 11),
-        intArrayOf(6, 10, 13),
+        intArrayOf(5, 11, 10, 3, 13, 10, 3, 11, 13),
+        intArrayOf(7, 13, 11, 3, 10, 11, 3, 13, 10),
+        intArrayOf(6, 10, 13, 3, 11, 13, 3, 10, 11),
     )
 
     // 顶点 4 对面
     private val face4 = arrayOf(
-        intArrayOf(1, 9, 12),
-        intArrayOf(2, 8, 9),
-        intArrayOf(0, 12, 8),
+        intArrayOf(1, 9, 12, 4, 8, 12, 4, 9, 8),
+        intArrayOf(2, 8, 9, 4, 12, 9, 4, 8, 12),
+        intArrayOf(0, 12, 8, 4, 9, 8, 4, 12, 9),
     )
     // 顶点 5 对面
     private val face5 = arrayOf(
-        intArrayOf(3, 10, 11),
-        intArrayOf(1, 12, 10 ),
-        intArrayOf(0, 11, 12),
+        intArrayOf(3, 10, 11, 5, 12, 11, 5, 10, 12),
+        intArrayOf(1, 12, 10, 5, 11, 10, 5, 12, 11),
+        intArrayOf(0, 11, 12, 5, 10, 12, 5, 11, 10),
     )
     // 顶点 6 对面
     private val face6 = arrayOf(
-        intArrayOf(1, 10, 9),
-        intArrayOf(3, 13, 10),
-        intArrayOf(2, 9, 13),
+        intArrayOf(1, 10, 9, 6, 13, 9, 6, 10, 13),
+        intArrayOf(3, 13, 10, 6, 9, 10, 6, 13, 9),
+        intArrayOf(2, 9, 13,  6, 10, 13, 6, 9, 10),
     )
     // 顶点 7 对面
     private val face7 = arrayOf(
-        intArrayOf(2, 13, 8),
-        intArrayOf(3, 11, 13),
-        intArrayOf(0, 8, 11),
+        intArrayOf(2, 13, 8, 7, 11, 8, 7, 13, 11),
+        intArrayOf(3, 11, 13, 7, 8, 13, 7, 11, 8),
+        intArrayOf(0, 8, 11, 7, 13, 11, 7, 8, 13),
     )
     private val v1 = arrayOf(
         face0,
@@ -182,10 +182,20 @@ object StellatedOctahedron : Polyhedron() {
 
             val map = mutableMapOf<String, String>()
 
-            fun fuzzySearch(map: Map<String, String>, headTerm: String, searchTerm: String): Boolean {
-                Log.i("AAA","headTerm = " + headTerm)
-                Log.i("AAA","searchTerm = " + searchTerm)
-                return map.values.any { it.startsWith(headTerm, ignoreCase = true) && it.endsWith(searchTerm, ignoreCase = true) }
+//            fun fuzzySearch(map: Map<String, String>, headTerm: String, searchTerm: String): Pair<String, Int>? {
+//                Log.i("AAA","headTerm = " + headTerm)
+//                Log.i("AAA","searchTerm = " + searchTerm)
+////                return map.values.any { it.startsWith(headTerm, ignoreCase = true) && it.endsWith(searchTerm, ignoreCase = true) }
+//                return map.entries.find { it.startsWith(headTerm, ignoreCase = true) && it.endsWith(searchTerm, ignoreCase = true) }?.toPair()
+//            }
+            fun fuzzySearch(map: Map<String, String>, headTerm: String, searchTerm: String): Pair<String, String>? {
+                return map.entries.find { it.value.startsWith(headTerm, ignoreCase = true) &&
+                        it.key.endsWith(searchTerm, ignoreCase = true) }?.toPair()
+            }
+
+            // 扩展函数，将 Map.Entry 转换为 Pair
+            fun <K, V> Map.Entry<K, V>.toPair(): Pair<K, V> {
+                return Pair(this.key, this.value)
             }
             for (i in S8.indices) {
                 val v = S8[i]
@@ -194,38 +204,66 @@ object StellatedOctahedron : Polyhedron() {
                     var triangle = face[0]
                     var tIndex = String.format("%02d,%02d,%02d", triangle[0], triangle[1], triangle[2])
                     if (isClockwise(triangle[0], triangle[1], triangle[2])) {
-                        var value = String.format("%02d,%02d,%02d,%02d,%02d,%02d", i, 0, 0, triangle[0], triangle[1], triangle[2])
+                        var value = String.format("%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d", i, j, 0, triangle[3], triangle[4], triangle[5], triangle[6], triangle[7], triangle[8])
                         map[tIndex] = value
                         triangle = face[1]
                         tIndex =
                             String.format("%02d,%02d,%02d", triangle[0], triangle[1], triangle[2])
-                        value = String.format("%02d,%02d,%02d,%02d,%02d,%02d", i, 0, 1, triangle[0], triangle[1], triangle[2])
+                        value = String.format("%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d", i, j, 1, triangle[3], triangle[4], triangle[5], triangle[6], triangle[7], triangle[8])
                         map[tIndex] = value
                         triangle = face[2]
                         tIndex =
                             String.format("%02d,%02d,%02d", triangle[0], triangle[1], triangle[2])
-                        value = String.format("%02d,%02d,%02d,%02d,%02d,%02d", i, 0, 2, triangle[0], triangle[1], triangle[2])
+                        value = String.format("%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d", i, j, 2, triangle[3], triangle[4], triangle[5], triangle[6], triangle[7], triangle[8])
                         map[tIndex] = value
                     }
                 }
             }
             for (key in map.keys) {
+                Log.i("AAA","key 000 = " + key + " and value 000 = " + map[key])
                 println("key= " + key + " and value= " + map[key])
+                val arr0 = key.split(",")
                 val arr = map[key]?.split(",")
                 val i = arr?.get(0)?.toInt()
-                val j = arr?.get(1)?.toInt()
-                val k = arr?.get(2)?.toInt()
-                val p1 = arr?.get(3)?.toInt()
-                val p2 = arr?.get(4)?.toInt()
-                val p3 = arr?.get(5)?.toInt()
-                val found = fuzzySearch(map, String.format("%02d", 1 - i!!), arr[5] + "," + arr[4])
-                if (found) {
-                    drawTriangle(intArrayOf(p1!!, p2!!, p3!!))
+                Log.i("AAA","String.format(\"%02d\", 1 - i!!) = " + String.format("%02d", 1 - i!!))
+                Log.i("AAA","arr0[2] , arr0[1] = " + arr0[2] + "," + arr0[1])
+                val result = fuzzySearch(map, String.format("%02d", 1 - i!!), arr0[2] + "," + arr0[1])
+//                Log.i("AAA","key 999 = ")
+//                drawTriangle(intArrayOf(arr0[0].toInt(), arr0[1].toInt(), arr0[2].toInt()))
+                if (result != null) {
+//                    drawTriangle(intArrayOf(p1!!, p2!!, p3!!))
+//                    Log.i("AAA","key 999 = ")
+                    Log.i("AAA","key 999 = " + result.first + " and value 999 = " + result.second)
+                    map[key] = map[key] + ",B"
+                    map[result.first] = result.second + ",B"
+//                    println("key 999 = " + result.first + " and value 999 = " + result.second)
+                }
+            }
+            for (key in map.keys) {
+                if (map[key]?.endsWith(",B")!!) {
+                    val arr = key.split(",")
+                    val p1 = arr[0].toInt()
+                    val p2 = arr[1].toInt()
+                    val p3 = arr[2].toInt()
+                    drawTriangle(intArrayOf(p1, p2, p3))
+                } else {
+//                    val arr = map[key]?.split(",")
+//                    val i = arr?.get(0)?.toInt()
+//                    val p1 = arr?.get(3)?.toInt()
+//                    val p2 = arr?.get(4)?.toInt()
+//                    val p3 = arr?.get(5)?.toInt()
+//                    val result = fuzzySearch(map, String.format("%02d", 1 - i!!), arr[5] + "," + arr[4])
+//    //                Log.i("AAA","key 999 = ")
+//                    if (result != null) {
+////                        drawTriangle(intArrayOf(p1!!, p2!!, p3!!))
+//    //                    Log.i("AAA","key 999 = ")
+//                        Log.i("AAA","key 999 = " + result.first + " and value 999 = " + result.second)
+////                        map[key] = map[key] + ",B"
+////                        map[result.first] = result.second + ",B"
+//    //                    println("key 999 = " + result.first + " and value 999 = " + result.second)
+//                    }
                 }
             }
         }
     }
 }
-
-
-
