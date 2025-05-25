@@ -1,5 +1,6 @@
 package com.frank.solidcompose.polyhedron
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.frank.solidcompose.Common
 import com.frank.solidcompose.toDraw
+import kotlin.collections.indices
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 object StellatedOctahedron : Polyhedron() {
     // 顶点 0 对面
@@ -134,6 +138,17 @@ object StellatedOctahedron : Polyhedron() {
         pZ[13] = (pZ[6] + pZ[7]) / 2
         myInit()
     }
+
+    private fun isClockwise(p1: Int, p2: Int, p3: Int) :Boolean{
+        val x1 = p[p1].x
+        val y1 = p[p1].y
+        val x2 = p[p2].x
+        val y2 = p[p2].y
+        val x3 = p[p3].x
+        val y3 = p[p3].y
+        return (x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1) < 0
+    }
+
     @Composable
     override fun DrawSolid() {
         Canvas(
@@ -141,38 +156,76 @@ object StellatedOctahedron : Polyhedron() {
                 .fillMaxSize()
                 .background(Color.Black)
         ) {
+            fun drawTriangle(triangle: IntArray) {
+                drawLine(
+                    start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
+                    end = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
+                    strokeWidth = 10f,
+//                            color = Color.LightGray
+                    color = Color.Yellow
+                )
+                drawLine(
+                    start = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
+                    end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
+                    strokeWidth = 10f,
+                    color = Color.Yellow
+                )
+                drawLine(
+                    start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
+                    end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
+                    strokeWidth = 10f,
+                    color = Color.Yellow
+                )
+            }
+
             if (toDraw < -1) return@Canvas
 
+            val map = mutableMapOf<String, String>()
+
+            fun fuzzySearch(map: Map<String, String>, headTerm: String, searchTerm: String): Boolean {
+                Log.i("AAA","headTerm = " + headTerm)
+                Log.i("AAA","searchTerm = " + searchTerm)
+                return map.values.any { it.startsWith(headTerm, ignoreCase = true) && it.endsWith(searchTerm, ignoreCase = true) }
+            }
             for (i in S8.indices) {
                 val v = S8[i]
                 for (j in v.indices) {
                     val face = v[j]
-                    for (k in face.indices) {
-                        val triangle = face[k]
-                        drawLine(
-                            start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
-                            end = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
-                            strokeWidth = 10f,
-//                            color = Color.LightGray
-                            color = Color.Yellow
-                        )
-                        drawLine(
-                            start = Offset(x = p[triangle[1]].x, y = p[triangle[1]].y),
-                            end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
-                            strokeWidth = 10f,
-                            color = Color.Yellow
-                        )
-                        drawLine(
-                            start = Offset(x = p[triangle[0]].x, y = p[triangle[0]].y),
-                            end = Offset(x = p[triangle[2]].x, y = p[triangle[2]].y),
-                            strokeWidth = 10f,
-                            color = Color.Yellow
-                        )
+                    var triangle = face[0]
+                    var tIndex = String.format("%02d,%02d,%02d", triangle[0], triangle[1], triangle[2])
+                    if (isClockwise(triangle[0], triangle[1], triangle[2])) {
+                        var value = String.format("%02d,%02d,%02d,%02d,%02d,%02d", i, 0, 0, triangle[0], triangle[1], triangle[2])
+                        map[tIndex] = value
+                        triangle = face[1]
+                        tIndex =
+                            String.format("%02d,%02d,%02d", triangle[0], triangle[1], triangle[2])
+                        value = String.format("%02d,%02d,%02d,%02d,%02d,%02d", i, 0, 1, triangle[0], triangle[1], triangle[2])
+                        map[tIndex] = value
+                        triangle = face[2]
+                        tIndex =
+                            String.format("%02d,%02d,%02d", triangle[0], triangle[1], triangle[2])
+                        value = String.format("%02d,%02d,%02d,%02d,%02d,%02d", i, 0, 2, triangle[0], triangle[1], triangle[2])
+                        map[tIndex] = value
                     }
+                }
+            }
+            for (key in map.keys) {
+                println("key= " + key + " and value= " + map[key])
+                val arr = map[key]?.split(",")
+                val i = arr?.get(0)?.toInt()
+                val j = arr?.get(1)?.toInt()
+                val k = arr?.get(2)?.toInt()
+                val p1 = arr?.get(3)?.toInt()
+                val p2 = arr?.get(4)?.toInt()
+                val p3 = arr?.get(5)?.toInt()
+                val found = fuzzySearch(map, String.format("%02d", 1 - i!!), arr[5] + "," + arr[4])
+                if (found) {
+                    drawTriangle(intArrayOf(p1!!, p2!!, p3!!))
                 }
             }
         }
     }
 }
+
 
 

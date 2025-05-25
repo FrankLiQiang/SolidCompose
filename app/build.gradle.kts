@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace = "com.frank.solidcompose"
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.frank.solidcompose"
-        minSdk = 31
+        minSdk = 33
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.exifinterface:exifinterface:1.3.6")
+    implementation("androidx.media3:media3-common-ktx:1.7.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
