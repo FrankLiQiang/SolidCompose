@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import com.frank.solidcompose.Common.PointF
 import com.frank.solidcompose.Common.PointXYZ
+import com.frank.solidcompose.polyhedron.StellatedOctahedron
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -57,6 +58,10 @@ object Ring {
         }
 
     init {
+        init0()
+    }
+
+    fun init0() {
         createEllipse()
         Common.StartX = 700f
         Common.StartY = 100f

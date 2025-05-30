@@ -15,6 +15,7 @@ import com.frank.solidcompose.Common._screenWidth
 import com.frank.solidcompose.Common.getNewPoint
 import com.frank.solidcompose.Common.getNewSizePoint
 import com.frank.solidcompose.Common.resetPointF
+import com.frank.solidcompose.polyhedron.StellatedOctahedron
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -70,6 +71,10 @@ class Ball {
     }
 
     init {
+        init0()
+    }
+
+    fun init0() {
         RR = _screenWidth * 0.4f
 
         //纬线

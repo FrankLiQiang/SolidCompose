@@ -76,63 +76,79 @@ class MainActivity : ComponentActivity() {
                 } else {
                     when (solidType) {
                         0 -> {
+                            Tetrahedron.init0()
                             Tetrahedron.DrawSolid()
                         }
 
                         1 -> {
+                            Cube.init0()
                             Cube.DrawSolid()
                         }
 
                         2 -> {
+                            Octahedron.init0()
                             Octahedron.DrawSolid()
                         }
 
                         3 -> {
+                            Dodecahedron.init0()
                             Dodecahedron.DrawSolid()
                         }
 
                         4 -> {
+                            Icosahedron.init0()
                             Icosahedron.DrawSolid()
                         }
 
                         5 -> {
+                            PictCube.init0()
                             PictCube.DrawSolid()
                         }
 
                         6 -> {
+                            Ring.init0()
                             Ring.DrawRing()
                         }
 
                         7 -> {
+                            Mobius().init0()
                             Mobius().DrawRing()
                         }
 
                         10 -> {
+                            Ball().init0()
                             Ball().DrawBall()
                         }
 
                         11 -> {
+                            Cube0.init0()
                             Cube0.DrawSolid()
                         }
 
                         12 -> {
+                            Earth.init0()
                             Earth.DrawPicBall()
                         }
 
                         13 -> {
+                            Dodecahedron0.init0()
                             Dodecahedron0.DrawSolid()
                         }
 
                         14 -> {
+                            ColorCube.init0()
                             ColorCube.DrawSolid()
                         }
                         15 -> {
+                            Stellated_Octahedron.init0()
                             Stellated_Octahedron.DrawSolid()
                         }
                         16 -> {
+                            StellatedOctahedron.init0()
                             StellatedOctahedron.DrawSolid()
                         }
                         17 -> {
+                            Earth.init0()
                             Earth.DrawPicBall()
                         }
                     }

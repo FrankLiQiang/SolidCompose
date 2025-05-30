@@ -26,6 +26,10 @@ object ColorCube : Polyhedron() {
     )
 
     init {
+        init0()
+    }
+
+    fun init0() {
         val thisEdge = arrayOf(
             intArrayOf(0, 1),
             intArrayOf(1, 2),

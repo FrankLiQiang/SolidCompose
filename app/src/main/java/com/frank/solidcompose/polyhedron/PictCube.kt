@@ -63,6 +63,10 @@ object PictCube : Polyhedron() {
     )
 
     init {
+        init0()
+    }
+
+    fun init0() {
         System.loadLibrary("DrawSolid")
 
         val thisEdge = arrayOf(

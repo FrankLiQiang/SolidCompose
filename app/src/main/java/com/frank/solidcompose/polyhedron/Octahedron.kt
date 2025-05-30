@@ -4,6 +4,10 @@ import com.frank.solidcompose.Common
 
 object Octahedron : Polyhedron() {
     init {
+        init0()
+    }
+
+    fun init0() {
         val thisEdge = arrayOf(
             intArrayOf(0, 1),
             intArrayOf(0, 2),

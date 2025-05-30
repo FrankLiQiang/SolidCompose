@@ -4,6 +4,10 @@ import com.frank.solidcompose.Common
 
 object Icosahedron : Polyhedron() {
     init {
+        init0()
+    }
+
+    fun init0() {
         val m = 0.5257f
         val n = 0.85065f
         val thisEdge = arrayOf(

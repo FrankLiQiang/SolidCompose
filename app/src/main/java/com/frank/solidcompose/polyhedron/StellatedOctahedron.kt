@@ -80,11 +80,15 @@ object StellatedOctahedron : Polyhedron() {
         v1, v2,
     )
     init {
+        init0()
+    }
+
+    fun init0() {
         initialization(14, 24, face0)
-        edgeLength = Common._screenWidth / 2f
+        edgeLength = Common._screenWidth / 1.3f
         Common.ObjCenter.reset(Common._screenWidth / 2f, Common._screenHeight / 2f, -edgeLength / 2)
 
-        pX[5] = Common._screenWidth / 4f
+        pX[5] = Common.ObjCenter.x - edgeLength / 2
         pX[0] = pX[5]
         pX[3] = pX[5]
         pX[7] = pX[5]
@@ -94,7 +98,7 @@ object StellatedOctahedron : Polyhedron() {
         pX[6] = pX[1]
         pX[2] = pX[1]
 
-        pY[5] = Common._screenHeight / 2f - edgeLength / 2
+        pY[5] = Common.ObjCenter.y - edgeLength / 2
         pY[1] = pY[5]
         pY[4] = pY[5]
         pY[0] = pY[5]
