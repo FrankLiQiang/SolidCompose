@@ -126,7 +126,6 @@ class MainActivity : ComponentActivity() {
                         }
 
                         12 -> {
-                            Earth.init0()
                             Earth.DrawPicBall()
                         }
 
@@ -148,7 +147,6 @@ class MainActivity : ComponentActivity() {
                             StellatedOctahedron.DrawSolid()
                         }
                         17 -> {
-                            Earth.init0()
                             Earth.DrawPicBall()
                         }
                     }
